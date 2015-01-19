@@ -1,0 +1,120 @@
+body
+{
+	font-family: Trebuchet MS;
+}
+
+
+header
+{
+	background: -webkit-linear-gradient(#003363, #003363); 
+	background: -o-linear-gradient(#7fb0f4, #003363); 
+	background: -moz-linear-gradient(#7fb0f4, #003363);  
+	background: linear-gradient(#006dd2, #003363); 
+	padding: 10px;
+}
+
+.list-title
+{
+	font-size: 16px;
+	color: white;
+	font-family: Trebuchet MS;
+}
+
+.list-item
+{
+	padding-top: 10px;
+	padding-bottom: 10px; 
+	border-bottom: 1px solid #c7e4ff;
+}
+
+.list-select
+{
+	display: none;
+}
+
+.list-item-text
+{
+	display: inline-block;
+	vertical-align: top;
+	width: 50%;
+}
+
+.list-item-video
+{
+	background-image: url(suarez.jpg);
+	background-size: cover;
+	height: 80px;
+	width: 130px;
+	display: inline-block;
+}
+
+.list-item-title
+{
+	font-size: 20px;
+	font-family: arial;
+	color: #003363;
+
+	margin-bottom: 50px;
+	text-overflow: ellipsis;
+	width: 80%;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.list-item-date
+{
+	font-size: 13px;
+	font-family: arial;
+	color: #49a8ff;
+}
+
+.list-item-shadow
+{
+	width: 130px;
+	height: 80px; 
+	background-color: #585858;
+	position: relative;
+	margin-bottom: -80px;
+	opacity: 0.6;
+	color: white;
+	font-size: 18px;
+	text-align: center;
+
+}
+
+.list-item:hover >.list-item-shadow
+{
+	opacity: 1;
+}
+
+.list-item-shadow-title
+{
+	position: relative;
+	top: 20px;
+}
+
+
+.load-button
+{
+	width: 100%;
+	text-align: center;
+	margin: 20px;
+}
+
+button
+{
+	background-color: #0478e3;
+	border: 0px;
+	border-bottom: 1px solid black;
+	padding: 10px;
+	color: white;
+	font-size: 18px;
+	font-weight: bold;
+
+}
+
+
+footer
+{
+	display: none;
+}

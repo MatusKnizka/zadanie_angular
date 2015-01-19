@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="shortcut icon" type="image/jpg" href="favicon.jpg"/>
+	<meta charset="utf-8"/>
+	<link rel="stylesheet" type="text/css" href="css/reset.css" />
+	<link rel="stylesheet" media="screen and (min-width: 600px)" href="css/style.css" />
+	<link rel="stylesheet" media="screen and (max-width: 600px)" href="css/style_small.css" />
+
+	<title>Zadanie</title>
+</head>
+<body ng-app="list">
+	<main class="videolist" id="videolist" ng-controller="items as it">
+		<header class="list-header">
+			<h1 class="list-title">LATEST VIDEOS</h1>
+			<img class="list-favorites" src="settings.ico">
+		</header>
+
+		<ul class="list-body" id="list-body">
+			
+			<li class="list-item" style="display: inline-block;"  ng-repeat="item in data |  limitTo: it.getItemMax() | limitTo: it.getItemMin()" on-last-repeat>
+				<div class="list-item-shadow" style="display: none;">
+					<span class="list-item-shadow-favorite" data-fav="2">Add to favorites</span>
+					<span class="list-item-shadow-title" style="display: none;">
+						<span class="list-item-shadow-categories" data="Handball">Handball, </span>
+						<span class="list-item-shadow-categories" data="Volleyball">Volleyball, </span>
+						<span class="list-item-shadow-categories" data="Handball">Handball, </span>
+						<span class="list-item-shadow-categories" data="Basketball">Basketball</span>
+					</span>
+				</div>
+				<video class="list-item-video" controls="" style="background: url({{it.getImage(item.image)}}.jpg);background-size: cover;background-position: center center;"></video>
+				<article class="list-item-text">
+					<h2 class="list-item-title"> {{ item.title }} </h2>
+					<h3 class="list-item-date">{{ it.getTime(item.timestamp) }}</h3>
+				</article>
+			</li>
+
+		</ul>
+
+		<footer class="paging">
+			<div class="paging-previous button" ng-click="it.previousPage()">
+				PREVIOUS
+			</div>
+
+
+			<div class="paging-buttons" id="paging-buttons">
+				<div class="paging-pagenum" ng-repeat="page in pages" ng-click="it.toPage(page)">{{ page }}</div>
+			</div>
+
+
+
+			<div class="paging-next button" ng-click="it.nextPage()">NEXT</div>
+		</footer>
+
+		<article class="load-button">
+			<button>LOAD MORE</button>
+		</article>
+
+		<article class="favorites" style="display:none;">
+			<h3 class="favorites-title">Settings</h3>
+
+			<select class="favorites-list-select favorites-category-select">
+				<!-- SELECT LIST FOR CATEGORIES -->
+			</select>
+			<br>
+			<select class="favorites-list-select favorites-list-items-to-page">
+				<!-- SELECT LIST FOR ITEMS TO PAGE -->
+			</select>
+			<br>
+			<div class="favorites-enable-button">
+				<!-- ENABLE OR DISABLE FAVORITES LIST -->
+			</div>
+		</article>
+	</main>
+
+
+
+
+
+</body>
+
+<script src="jquery.min.js"></script>
+<script src="angular.min.js"></script>
+<script src="helperClass/dateTimeHelper.js"></script>
+<script src="helperClass/writeHelper.js"></script>
+<script src="libary_angular.js"></script>
+
+
+
+
+</html>
+
+
