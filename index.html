@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="shortcut icon" type="image/jpg" href="favicon.jpg"/>
+	<link rel="shortcut icon" type="image/jpg" href="image/favicon.jpg"/>
 	<meta charset="utf-8"/>
 	<link rel="stylesheet" type="text/css" href="css/reset.css" />
 	<link rel="stylesheet" media="screen and (min-width: 600px)" href="css/style.css" />
@@ -9,26 +9,23 @@
 
 	<title>Zadanie</title>
 </head>
-<body ng-app="list">
-	<main class="videolist" id="videolist" ng-controller="items as it">
+<body ng-app="App">
+	<main class="videolist" id="videolist" ng-controller="main as m">		
 		<header class="list-header">
 			<h1 class="list-title">LATEST VIDEOS</h1>
-			<img class="list-favorites" src="settings.ico">
+			<img class="list-favorites" src="image/settings.ico" ng-controller="configPanel as cp" ng-click="cp.configPanelButton()">
 		</header>
 
-		<ul class="list-body" id="list-body">
+		<ul class="list-body" id="list-body" ng-controller="items as it">
 			
-			<li class="list-item" style="display: inline-block;"  ng-repeat="item in data |  limitTo: it.getItemMax() | limitTo: it.getItemMin()" on-last-repeat>
-				<div class="list-item-shadow" style="display: none;">
-					<span class="list-item-shadow-favorite" data-fav="2">Add to favorites</span>
-					<span class="list-item-shadow-title" style="display: none;">
-						<span class="list-item-shadow-categories" data="Handball">Handball, </span>
-						<span class="list-item-shadow-categories" data="Volleyball">Volleyball, </span>
-						<span class="list-item-shadow-categories" data="Handball">Handball, </span>
-						<span class="list-item-shadow-categories" data="Basketball">Basketball</span>
+			<li class="list-item" style="display: inline-block;"  ng-repeat="item in data |  limitTo: page*itemsToPage | limitTo: it.getItemMin()" on-last-repeat>
+				<div class="list-item-shadow" >
+					<span class="list-item-shadow-title">
+						<span class="list-item-shadow-categories" ng-repeat=" category in data[$index*page].categories track by $index"
+						ng-click="it.setCategory(category)">{{ category }} </span>
 					</span>
 				</div>
-				<video class="list-item-video" controls="" style="background: url({{it.getImage(item.image)}}.jpg);background-size: cover;background-position: center center;"></video>
+				<video class="list-item-video" controls="" style="background: url(image/{{item.image ? item.image : no-image}}.jpg);background-size: cover;background-position: center center;"></video>
 				<article class="list-item-text">
 					<h2 class="list-item-title"> {{ item.title }} </h2>
 					<h3 class="list-item-date">{{ it.getTime(item.timestamp) }}</h3>
@@ -37,57 +34,41 @@
 
 		</ul>
 
-		<footer class="paging">
-			<div class="paging-previous button" ng-click="it.previousPage()">
-				PREVIOUS
-			</div>
-
+		<footer class="paging" ng-controller="pagination as pg">
+			<div class="paging-previous button" ng-show="page > 1" ng-click="pg.toPage(page-1)">PREVIOUS</div>
 
 			<div class="paging-buttons" id="paging-buttons">
-				<div class="paging-pagenum" ng-repeat="page in pages" ng-click="it.toPage(page)">{{ page }}</div>
+				<div class="paging-pagenum" ng-show="page > 2" ng-click="pg.toPage(1)" >{{ 1 }}</div>
+				<span  ng-show="page > 3" ng-click="pg.toPage(pages.length)" >...</span>
+				<div ng-class="page === pageNum ? 'paging-selected' : 'paging-pagenum' " ng-repeat="pageNum in pages | limitTo: page+1 | limitTo: -3" ng-click="pg.toPage(pageNum)">{{ pageNum }}</div>
+				<span  ng-show="page < data.length/itemsToPage-2" ng-click="pg.toPage(pages.length)" >...</span>
+				<div class="paging-pagenum" ng-show="page < data.length/itemsToPage-1" ng-click="pg.toPage(pages.length)" >{{ pages.length }}</div>
 			</div>
+		</div>
 
+		<div class="paging-next button" ng-show="page < pages[pages.length-1]" ng-click="pg.toPage(page+1)">NEXT</div>
+	</footer>
 
+	<article class="load-button">
+		<button>LOAD MORE</button>
+	</article>
 
-			<div class="paging-next button" ng-click="it.nextPage()">NEXT</div>
-		</footer>
-
-		<article class="load-button">
-			<button>LOAD MORE</button>
-		</article>
-
-		<article class="favorites" style="display:none;">
-			<h3 class="favorites-title">Settings</h3>
-
-			<select class="favorites-list-select favorites-category-select">
-				<!-- SELECT LIST FOR CATEGORIES -->
-			</select>
-			<br>
-			<select class="favorites-list-select favorites-list-items-to-page">
-				<!-- SELECT LIST FOR ITEMS TO PAGE -->
-			</select>
-			<br>
-			<div class="favorites-enable-button">
-				<!-- ENABLE OR DISABLE FAVORITES LIST -->
-			</div>
-		</article>
-	</main>
-
-
-
-
-
+	<article class="favorites" ng-controller="favorites as fav" ng-show="showConfigPanel">
+		<h3 class="favorites-title">Settings</h3>
+		<select class="favorites-list-select favorites-category-select" ng-model="category">
+			<option ng-selected="{{ item === category }}" ng-repeat="item in favoriteList">{{ item }}</option>
+		</select>
+		<br>
+		<select class="favorites-list-select favorites-list-items-to-page" ng-model="itemsToPage">
+			<option ng-repeat="item in listOfItemsToPage">{{ item }}</option>
+		</select>	
+	</article>
+</main>
 </body>
 
-<script src="jquery.min.js"></script>
-<script src="angular.min.js"></script>
-<script src="helperClass/dateTimeHelper.js"></script>
-<script src="helperClass/writeHelper.js"></script>
-<script src="libary_angular.js"></script>
-
-
-
-
+<script src="js/jquery.min.js"></script>
+<script src="js/angular.min.js"></script>
+<script src="js/libary_angular.js"></script>
 </html>
 
 
