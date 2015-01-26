@@ -17,15 +17,16 @@
 		</header>
 
 		<ul class="list-body" id="list-body" ng-controller="items as it">
-			
 			<li class="list-item" style="display: inline-block;"  ng-repeat="item in data |  limitTo: page*itemsToPage | limitTo: it.getItemMin()" on-last-repeat>
 				<div class="list-item-shadow" >
+				<div ng-style="it.getFavoriteImage(item.id)" ng-click="it.manageFavorites(item.id)"></div>
 					<span class="list-item-shadow-title">
 						<span class="list-item-shadow-categories" ng-repeat=" category in data[$index*page].categories track by $index"
 						ng-click="it.setCategory(category)">{{ category }} </span>
 					</span>
+
 				</div>
-				<video class="list-item-video" controls="" style="background: url(image/{{item.image ? item.image : no-image}}.jpg);background-size: cover;background-position: center center;"></video>
+				<video class="list-item-video" controls="" style="background: url(image/{{item.image ? item.image : 'no-image'}}.jpg);background-size: cover;background-position: center center;"></video>
 				<article class="list-item-text">
 					<h2 class="list-item-title"> {{ item.title }} </h2>
 					<h3 class="list-item-date">{{ it.getTime(item.timestamp) }}</h3>

@@ -4,14 +4,18 @@ json.factory('load', ['$http', function($http) {
 }]);
 
 json.controller('main', ['$scope', 'load', function($scope, load) { 
+	if(localStorage.getItem("favorites") === null) {
+		localStorage.setItem("favorites", "[]")
+	}
 	$scope.page = 1;
 	$scope.itemsToPage = 12;
 	$scope.category = 'All';
-	$scope.listOfItemsToPage = [8,12,16,20];	
+	$scope.listOfItemsToPage = [8,12,16,20];
+	$scope.favorites = JSON.parse(localStorage.getItem("favorites"));	
 	$scope.showConfigPanel = false;
 
 	load.success(function(data) {
-		$scope.allData = data;
+		$scope.allData = this.getIdToVideos(data);
 		$scope.favoriteList = this.selectList($scope.allData);
 		$scope.render();
 	}.bind(this));
@@ -22,9 +26,24 @@ json.controller('main', ['$scope', 'load', function($scope, load) {
 		$scope.page = this.maxPages($scope.page, $scope.itemsToPage, $scope.data);
 	}.bind(this);
 
+	this.getIdToVideos = function(data) {
+		for(var x = 0; x < data.length; x++) {
+			data[x].id = x;
+		}
+		console.log(data);
+		return data;
+	}
+
 	this.parseVideos = function(parseBy, allData) {
 		var output = [];
 		if(parseBy !== "All") {
+			if(parseBy === "Favorites") {
+				for(var x = 0; x < $scope.favorites.length; x++) {
+					output.push(allData[$scope.favorites[x]]);
+				}
+				return output;
+			}
+
 			for(var x=0; x<allData.length; x++) {
 				for(i=0; i<allData[x].categories.length; i++) {
 					if(parseBy === allData[x].categories[i]) {
@@ -54,7 +73,7 @@ json.controller('main', ['$scope', 'load', function($scope, load) {
 	};
 
 	this.selectList = function(jsonData) {
-		var categories = ['All'];
+		var categories = ['All', 'Favorites'];
 		var control = 0;
 		if(jsonData === undefined) {
 			return categories;
@@ -123,6 +142,35 @@ list.controller('items', ['$scope', function($scope) {
 		days_array = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 		months_array = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 		return days_array[date.getDay()]+", "+date.getDate()+" "+months_array[date.getMonth()]+" "+date.getFullYear();
+	};
+
+	this.getFavoriteImage = function(itemId) {
+		console.log(itemId);
+		var style = {};
+		style.background = 'url(image/favorites.png)';
+		style.width = '30px';
+		style.height = '30px';
+		style['background-size'] = 'cover';
+		for(var x = 0; x<$scope.favorites.length; x++) {
+			if($scope.favorites[x] === itemId) {
+				style['background-position'] = 'right';
+				return style;
+			} 
+		}
+		style['background-position'] = 'left';
+		return style;
+	};
+
+	this.manageFavorites = function(itemId) {
+		for(var x = 0; x<$scope.favorites.length; x++) {
+			if($scope.favorites[x] === itemId) {
+				$scope.$parent.favorites.splice(x, 1);
+				localStorage.setItem("favorites", JSON.stringify($scope.favorites));
+				return false;
+			}
+		}
+		$scope.$parent.favorites.push(itemId);
+		localStorage.setItem("favorites", JSON.stringify($scope.favorites));
 	};
 }]);
 
